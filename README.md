@@ -1,5 +1,7 @@
 # 中州养老（zzyl）
 
+[![CI](https://github.com/yzw22/zzyl-nursing/actions/workflows/ci.yml/badge.svg)](https://github.com/yzw22/zzyl-nursing/actions/workflows/ci.yml)
+
 基于 [RuoYi](https://gitee.com/y_project/RuoYi-Vue) 3.8.9 二次开发的养老院管理平台，仓库内包含后端服务与 Web 前端。
 
 > 本仓库是学习/实战项目代码，仓库中的密钥已全部替换为占位值，运行前需自行配置。
@@ -97,6 +99,6 @@ docker run -d -p 8080:8080 \
 
 ## 说明
 
-- 本项目基于 RuoYi 3.8.9 改造，遵循其 MIT 许可协议，见 [backend/LICENSE](backend/LICENSE)。
+- 本项目基于 RuoYi 3.8.9 改造，遵循其 MIT 许可协议，见根目录 [LICENSE](LICENSE)。
 - 仓库内不包含数据库初始化脚本，需自行准备 `zzyl` 库的表结构与初始数据。
 - 已移除所有真实密钥，请勿将真实密钥提交回仓库。
