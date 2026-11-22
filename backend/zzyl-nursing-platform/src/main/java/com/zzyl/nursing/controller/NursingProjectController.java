@@ -1,0 +1,111 @@
+package com.zzyl.nursing.controller;
+
+import java.util.List;
+import com.zzyl.common.annotation.Log;
+import com.zzyl.common.core.controller.BaseController;
+import com.zzyl.common.core.domain.AjaxResult;
+import com.zzyl.common.core.page.TableDataInfo;
+import com.zzyl.common.enums.BusinessType;
+import com.zzyl.common.utils.poi.ExcelUtil;
+import com.zzyl.nursing.domain.NursingProject;
+import com.zzyl.nursing.service.INursingProjectService;
+import com.zzyl.nursing.vo.NursingProjectVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpServletResponse;
+
+/**
+ * 护理项目Controller
+ *
+ * @author alexis
+ * @date 2025-06-02
+ */
+@RestController
+@RequestMapping("/nursing/project")
+@Api(tags = "护理项目相关接口")
+public class NursingProjectController extends BaseController
+{
+    @Autowired
+    private INursingProjectService nursingProjectService;
+
+    /**
+     * 查询护理项目列表
+     */
+    @GetMapping("/list")
+    @ApiOperation("查询护理项目列表")
+    public TableDataInfo list(NursingProject nursingProject)
+    {
+        startPage();
+        List<NursingProject> list = nursingProjectService.selectNursingProjectList(nursingProject);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询所有启用的护理项目（下拉选项）
+     */
+    @GetMapping("/all")
+    @ApiOperation("查询所有护理项目")
+    public AjaxResult listAll()
+    {
+        List<NursingProjectVo> list = nursingProjectService.selectNursingProjectVoList();
+        return success(list);
+    }
+
+    /**
+     * 导出护理项目列表
+     */
+    @Log(title = "护理项目", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, NursingProject nursingProject)
+    {
+        List<NursingProject> list = nursingProjectService.selectNursingProjectList(nursingProject);
+        ExcelUtil<NursingProject> util = new ExcelUtil<NursingProject>(NursingProject.class);
+        util.exportExcel(response, list, "护理项目数据");
+    }
+
+    /**
+     * 获取护理项目详细信息
+     */
+    @GetMapping(value = "/{id}")
+    @ApiOperation("获取护理项目详细信息")
+    public AjaxResult getInfo(@PathVariable("id") Long id)
+    {
+        return success(nursingProjectService.selectNursingProjectById(id));
+    }
+
+    /**
+     * 新增护理项目
+     */
+    @Log(title = "护理项目", businessType = BusinessType.INSERT)
+    @PostMapping
+    @ApiOperation("新增护理项目")
+    public AjaxResult add(@RequestBody NursingProject nursingProject)
+    {
+        return toAjax(nursingProjectService.insertNursingProject(nursingProject));
+    }
+
+    /**
+     * 修改护理项目
+     */
+    @ApiOperation("修改护理项目")
+    @Log(title = "护理项目", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody NursingProject nursingProject)
+    {
+        return toAjax(nursingProjectService.updateNursingProject(nursingProject));
+    }
+
+    /**
+     * 删除护理项目
+     */
+    @ApiOperation("删除护理项目")
+    @Log(title = "护理项目", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids)
+    {
+        return toAjax(nursingProjectService.deleteNursingProjectByIds(ids));
+    }
+}
